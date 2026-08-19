@@ -14,10 +14,16 @@ app.use(express.json());
 const PORT = process.env.PORT || 3001;
 const DEMO_CITY = process.env.DEMO_CITY || "Chennai";
 
+// Helper for security and code quality: validate coordinates
+function isValidCoord(coord) {
+  return coord && typeof coord.lat === 'number' && typeof coord.lng === 'number' &&
+         coord.lat >= -90 && coord.lat <= 90 && coord.lng >= -180 && coord.lng <= 180;
+}
+
 app.post('/api/trip-intents', async (req, res) => {
   const { label, origin, destination, departEarliest, departLatest, seatsAvailable } = req.body;
-  if (!label || !origin || !destination) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!label || !isValidCoord(origin) || !isValidCoord(destination)) {
+    return res.status(400).json({ error: 'Missing or invalid required fields (label, origin, destination)' });
   }
 
   try {
@@ -69,8 +75,8 @@ app.get('/api/trip-intents', (req, res) => {
 
 app.post('/api/plan', async (req, res) => {
   const { origin, destination } = req.body;
-  if (!origin || !destination) {
-    return res.status(400).json({ error: 'Missing origin or destination' });
+  if (!isValidCoord(origin) || !isValidCoord(destination)) {
+    return res.status(400).json({ error: 'Missing or invalid origin or destination coordinates' });
   }
 
   const p_osrm_car = axios.get(`https://routing.openstreetmap.de/routed-car/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=full&geometries=geojson`);

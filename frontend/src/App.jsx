@@ -173,7 +173,7 @@ export default function App() {
         <div className="p-6 bg-green-50 border-b border-green-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Leaf className="text-green-600 w-8 h-8" />
-            <h1 className="text-2xl font-bold text-green-900">GreenPath v2</h1>
+            <h1 className="text-2xl font-bold text-green-900">GreenPath</h1>
           </div>
           <button onClick={() => setShowAdmin(!showAdmin)} className="text-gray-500 hover:text-green-600 transition-colors">
             <UserPlus className="w-5 h-5" />
